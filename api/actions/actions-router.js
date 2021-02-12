@@ -7,7 +7,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
     Actions.get(req.query)
         .then(actions => {
-            res.status(200).json(actions)
+            res.status(200).json(actions || [])
         })
         .catch(error => {
             res.status(500).json({message: `Error retrieving actions: ${error}`})
@@ -31,7 +31,11 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     Actions.insert(req.body)
         .then(action => {
-            res.status(201).json(action)
+            if (!req.body.description || !req.body.notes) {
+                res.status(400).json({message: 'description AND notes required'})
+            } else {
+                res.status(201).json(action)
+            }
         })
         .catch(error => {
             res.status(500).json({message: `Server error: ${error}`})
@@ -41,10 +45,10 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     Actions.update(req.params.id, req.body)
         .then(action => {
-            if (action) {
-                res.status(200).json(action)
+            if (!req.body.description || !req.body.notes) {
+                res.status(400).json({message: 'Description and notes required'})
             } else {
-                res.status(404).json({message: 'not found'})
+                res.status(200).json(action)
             }
         })
         .catch(error => {

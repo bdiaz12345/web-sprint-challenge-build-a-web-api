@@ -7,7 +7,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
     Projects.get(req.query)
         .then(projects => {
-            res.status(200).json(projects)
+            res.status(200).json(projects || [])
         })
         .catch(error => {
             res.status(500).json({message: `Error: ${error}`})
@@ -38,7 +38,7 @@ router.post('/', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(500).json({message: `Server error: ${error}`})
+            res.status(400).json({message: `Server error: ${error}`})
         })
 })
 
@@ -52,7 +52,7 @@ router.put('/:id', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(500).json(`Server error: ${error}`)
+            res.status(400).json(`Server error: ${error}`)
         })
 })
 
@@ -66,7 +66,7 @@ router.delete('/:id', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(500).json({message: `Server error: ${error}`})
+            res.status(400).json({message: `Server error: ${error}`})
         })
 })
 

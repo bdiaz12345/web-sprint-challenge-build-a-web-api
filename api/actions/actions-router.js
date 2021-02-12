@@ -38,7 +38,7 @@ router.post('/', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(500).json({message: `Server error: ${error}`})
+            res.status(400).json({message: `Server error: ${error}`})
         })
 })
 
@@ -52,7 +52,7 @@ router.put('/:id', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(500).json(`error: ${error}`)
+            res.status(400).json(`error: ${error}`)
         })
 })
 

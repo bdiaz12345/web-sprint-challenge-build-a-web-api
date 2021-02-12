@@ -31,7 +31,11 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     Projects.insert(req.body)
         .then(project => {
-            res.status(201).json(project)
+            if (!req.body.name || !req.body.description) {
+                res.status(400).json({message: 'name and description required'})
+            } else {
+                res.status(200).json(project)
+            }
         })
         .catch(error => {
             res.status(500).json({message: `Server error: ${error}`})
@@ -41,10 +45,10 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     Projects.update(req.params.id, req.body)
         .then(project => {
-            if (project) {
-                res.status(200).json(project)
+            if (!req.body.name || !req.body.description) {
+                res.status(400).json({message: 'name and description required'})
             } else {
-                res.status(404).json({message: 'not found'})
+                res.status(200).json(project)
             }
         })
         .catch(error => {
@@ -54,8 +58,12 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     Projects.remove(req.params.id)
-        .then(count => {
-            res.status(200).json({message: 'project deleted!'})
+        .then(project => {
+            if (project) {
+                res.status(200).json({message: 'deleted!'})
+            } else {
+                res.status(404).json({message: 'not found'})
+            }
         })
         .catch(error => {
             res.status(500).json({message: `Server error: ${error}`})
